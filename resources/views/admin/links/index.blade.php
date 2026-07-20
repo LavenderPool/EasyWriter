@@ -1,43 +1,43 @@
 @extends('layouts.admin')
 
-@section('title', 'Share links — '.$manga->title)
-@section('heading', 'Share links: '.$manga->title)
+@section('title', __('admin.links.title', ['title' => $manga->title]))
+@section('heading', __('admin.links.heading', ['title' => $manga->title]))
 
 @section('content')
     <div class="toolbar">
-        <a href="{{ route('admin.mangas.show', $manga) }}" class="btn btn-ghost">Back</a>
+        <a href="{{ route('admin.mangas.show', $manga) }}" class="btn btn-ghost">{{ __('admin.common.back') }}</a>
     </div>
 
     <div class="panel narrow">
-        <h2>Create link</h2>
+        <h2>{{ __('admin.links.create') }}</h2>
         @unless ($manga->is_published)
-            <p class="alert alert-error">Publish the manga first to create share links.</p>
+            <p class="alert alert-error">{{ __('admin.links.publish_first') }}</p>
         @endunless
         <form method="POST" action="{{ route('admin.mangas.links.store', $manga) }}" class="form inline-form">
             @csrf
             <label>
-                <span>Label (e.g. Telegram channel, friends)</span>
-                <input type="text" name="label" maxlength="255" placeholder="Optional label" {{ $manga->is_published ? '' : 'disabled' }}>
+                <span>{{ __('admin.links.label') }}</span>
+                <input type="text" name="label" maxlength="255" placeholder="{{ __('admin.links.label_placeholder') }}" {{ $manga->is_published ? '' : 'disabled' }}>
             </label>
-            <button type="submit" class="btn btn-primary" {{ $manga->is_published ? '' : 'disabled' }}>Create link</button>
+            <button type="submit" class="btn btn-primary" {{ $manga->is_published ? '' : 'disabled' }}>{{ __('admin.links.create_button') }}</button>
         </form>
     </div>
 
     <div class="panel">
         <div class="panel-head">
-            <h2>All links</h2>
+            <h2>{{ __('admin.links.all') }}</h2>
         </div>
         @if ($links->isEmpty())
-            <p class="muted">No share links yet. Each link can be shared separately and tracks its own views.</p>
+            <p class="muted">{{ __('admin.links.empty') }}</p>
         @else
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Label</th>
-                        <th>URL</th>
-                        <th>Views</th>
-                        <th>Status</th>
-                        <th>Last viewed</th>
+                        <th>{{ __('admin.links.label_short') }}</th>
+                        <th>{{ __('admin.links.url') }}</th>
+                        <th>{{ __('admin.links.views') }}</th>
+                        <th>{{ __('admin.common.status') }}</th>
+                        <th>{{ __('admin.links.last_viewed') }}</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -47,21 +47,21 @@
                             <td>{{ $link->label ?: '—' }}</td>
                             <td class="url-cell">
                                 <code id="link-{{ $link->id }}">{{ $link->publicUrl() }}</code>
-                                <button type="button" class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('link-{{ $link->id }}').textContent)">Copy</button>
+                                <button type="button" class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText(document.getElementById('link-{{ $link->id }}').textContent)">{{ __('admin.common.copy') }}</button>
                             </td>
                             <td>{{ $link->views_count }}</td>
                             <td>
                                 <span class="badge {{ $link->is_active ? 'badge-ok' : 'badge-muted' }}">
-                                    {{ $link->is_active ? 'Active' : 'Disabled' }}
+                                    {{ $link->is_active ? __('admin.common.active') : __('admin.common.disabled') }}
                                 </span>
                             </td>
                             <td>{{ $link->last_viewed_at?->diffForHumans() ?? '—' }}</td>
                             <td class="actions">
-                                <a href="{{ route('admin.mangas.links.show', [$manga, $link]) }}">Stats</a>
-                                <form method="POST" action="{{ route('admin.mangas.links.destroy', [$manga, $link]) }}" onsubmit="return confirm('Delete this link?')">
+                                <a href="{{ route('admin.mangas.links.show', [$manga, $link]) }}">{{ __('admin.links.stats') }}</a>
+                                <form method="POST" action="{{ route('admin.mangas.links.destroy', [$manga, $link]) }}" onsubmit="return confirm(@js(__('admin.links.confirm_delete')))">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="link-danger">Delete</button>
+                                    <button type="submit" class="link-danger">{{ __('admin.common.delete') }}</button>
                                 </form>
                             </td>
                         </tr>

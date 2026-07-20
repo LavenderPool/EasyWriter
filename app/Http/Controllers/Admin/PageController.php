@@ -61,7 +61,7 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.mangas.pages.index', $manga)
-            ->with('success', 'Pages uploaded.');
+            ->with('success', __('admin.pages.uploaded'));
     }
 
     public function edit(Manga $manga, Page $page): View
@@ -97,7 +97,7 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.mangas.pages.index', $manga)
-            ->with('success', 'Page updated.');
+            ->with('success', __('admin.pages.updated'));
     }
 
     public function destroy(Manga $manga, Page $page): RedirectResponse
@@ -108,7 +108,7 @@ class PageController extends Controller
 
         return redirect()
             ->route('admin.mangas.pages.index', $manga)
-            ->with('success', 'Page deleted.');
+            ->with('success', __('admin.pages.deleted'));
     }
 
     public function reorder(Request $request, Manga $manga): RedirectResponse
@@ -126,7 +126,7 @@ class PageController extends Controller
             }
         });
 
-        return back()->with('success', 'Pages reordered.');
+        return back()->with('success', __('admin.pages.reordered'));
     }
 
     public function image(Manga $manga, Page $page): StreamedResponse

@@ -34,7 +34,7 @@ class AuthController extends Controller
             $seconds = RateLimiter::availableIn($throttleKey);
 
             throw ValidationException::withMessages([
-                'email' => "Too many login attempts. Try again in {$seconds} seconds.",
+                'email' => __('admin.login.throttle', ['seconds' => $seconds]),
             ]);
         }
 
@@ -42,7 +42,7 @@ class AuthController extends Controller
             RateLimiter::hit($throttleKey, 60);
 
             throw ValidationException::withMessages([
-                'email' => 'These credentials do not match our records.',
+                'email' => __('admin.login.failed'),
             ]);
         }
 
