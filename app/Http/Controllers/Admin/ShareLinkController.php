@@ -21,7 +21,7 @@ class ShareLinkController extends Controller
     public function store(Request $request, Manga $manga): RedirectResponse
     {
         if (! $manga->is_published) {
-            return back()->with('error', 'Publish the manga before creating share links.');
+            return back()->with('error', __('admin.links.publish_before_create'));
         }
 
         $data = $request->validate([
@@ -34,7 +34,7 @@ class ShareLinkController extends Controller
             'is_active' => true,
         ]);
 
-        return back()->with('success', 'Share link created.');
+        return back()->with('success', __('admin.links.created'));
     }
 
     public function show(Manga $manga, ShareLink $link): View
@@ -62,7 +62,7 @@ class ShareLinkController extends Controller
             'is_active' => $request->boolean('is_active'),
         ]);
 
-        return back()->with('success', 'Share link updated.');
+        return back()->with('success', __('admin.links.updated'));
     }
 
     public function countries(Manga $manga, ShareLink $link)
@@ -89,7 +89,7 @@ class ShareLinkController extends Controller
 
         return redirect()
             ->route('admin.mangas.links.index', $manga)
-            ->with('success', 'Share link deleted.');
+            ->with('success', __('admin.links.deleted'));
     }
 
     public function regenerate(Manga $manga, ShareLink $link): RedirectResponse
@@ -100,6 +100,6 @@ class ShareLinkController extends Controller
             'token' => ShareLink::generateToken(),
         ]);
 
-        return back()->with('success', 'Share link token regenerated.');
+        return back()->with('success', __('admin.links.regenerated'));
     }
 }

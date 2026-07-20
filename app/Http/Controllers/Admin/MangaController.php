@@ -47,7 +47,7 @@ class MangaController extends Controller
 
         return redirect()
             ->route('admin.mangas.show', $manga)
-            ->with('success', 'Manga created.');
+            ->with('success', __('admin.mangas.created'));
     }
 
     public function show(Manga $manga): View
@@ -88,7 +88,7 @@ class MangaController extends Controller
 
         return redirect()
             ->route('admin.mangas.show', $manga)
-            ->with('success', 'Manga updated.');
+            ->with('success', __('admin.mangas.updated'));
     }
 
     public function destroy(Manga $manga): RedirectResponse
@@ -106,6 +106,6 @@ class MangaController extends Controller
 
         return redirect()
             ->route('admin.mangas.index')
-            ->with('success', 'Manga deleted.');
+            ->with('success', __('admin.mangas.deleted'));
     }
 }

@@ -113,4 +113,72 @@ class AdminAndReaderTest extends TestCase
             'name' => 'Root',
         ]);
     }
+
+    public function test_admin_ui_is_in_russian(): void
+    {
+        $admin = User::factory()->create();
+
+        $this->get(route('admin.login'))
+            ->assertOk()
+            ->assertSee('Приватная админка манги', false)
+            ->assertSee('Войти', false);
+
+        $this->actingAs($admin)
+            ->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('Панель', false)
+            ->assertSee('Манга', false)
+            ->assertSee('Смена пароля', false)
+            ->assertSee('Выйти', false);
+    }
+
+    public function test_admin_can_change_password(): void
+    {
+        $admin = User::factory()->create([
+            'password' => 'old-secure-password',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.password.edit'))
+            ->assertOk()
+            ->assertSee('Смена пароля', false);
+
+        $this->actingAs($admin)
+            ->put(route('admin.password.update'), [
+                'current_password' => 'old-secure-password',
+                'password' => 'new-secure-password',
+                'password_confirmation' => 'new-secure-password',
+            ])
+            ->assertRedirect()
+            ->assertSessionHas('success');
+
+        $this->post(route('admin.logout'));
+
+        $this->post(route('admin.login.submit'), [
+            'email' => $admin->email,
+            'password' => 'old-secure-password',
+        ])->assertSessionHasErrors('email');
+
+        $this->post(route('admin.login.submit'), [
+            'email' => $admin->email,
+            'password' => 'new-secure-password',
+        ])->assertRedirect(route('admin.dashboard'));
+    }
+
+    public function test_admin_password_change_requires_current_password(): void
+    {
+        $admin = User::factory()->create([
+            'password' => 'old-secure-password',
+        ]);
+
+        $this->actingAs($admin)
+            ->from(route('admin.password.edit'))
+            ->put(route('admin.password.update'), [
+                'current_password' => 'wrong-password-here',
+                'password' => 'new-secure-password',
+                'password_confirmation' => 'new-secure-password',
+            ])
+            ->assertRedirect(route('admin.password.edit'))
+            ->assertSessionHasErrors('current_password');
+    }
 }

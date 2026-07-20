@@ -4,7 +4,8 @@ Private manga publishing service (Wattpad-style reader) built with **Laravel 13*
 
 ## Features
 
-- Admin panel for private mangas
+- Russian admin panel for private mangas
+- Admin password change from the UI
 - Page CRUD: **1 image = 1 page**
 - Private publish via share links (Telegram-style multiple links per book)
 - Per-link view counting and country stats (UI + JSON API)
