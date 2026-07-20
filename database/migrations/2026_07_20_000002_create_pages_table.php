@@ -1,0 +1,28 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('pages', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('manga_id')->constrained()->cascadeOnDelete();
+            $table->unsignedInteger('page_number');
+            $table->string('image_path');
+            $table->string('original_name')->nullable();
+            $table->timestamps();
+
+            $table->unique(['manga_id', 'page_number']);
+            $table->index(['manga_id', 'page_number']);
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('pages');
+    }
+};
